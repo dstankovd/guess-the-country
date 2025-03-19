@@ -10,15 +10,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { shuffleArray } from "@/lib/utils";
-import { flagData } from "@/lib/flag-data";
+import { pickRandomElement, shuffleArray } from "@/lib/utils";
+import { countriesData } from "@/lib/countries-data";
 import ProgressTracker from "./progress-tracker";
 
 type AnswerStatus = "unanswered" | "correct" | "incorrect";
+type QuestionMode = "flags" | "capitals";
+export type QuizMode = "flags" | "capitals" | "mixed";
 
 interface QuizState {
   questions: {
+    mode: "flags" | "capitals";
     flag: string;
+    capital: string;
     correctAnswer: string;
     options: string[];
     status: AnswerStatus;
@@ -28,7 +32,10 @@ interface QuizState {
   gameCompleted: boolean;
 }
 
-export default function Quiz() {
+export default function Quiz({ mode }: { mode: QuizMode }) {
+  const questionModeOptions: QuestionMode[] =
+    mode === "mixed" ? ["flags", "capitals"] : [mode];
+
   const router = useRouter();
   const [quizState, setQuizState] = useState<QuizState>({
     questions: [],
@@ -37,22 +44,26 @@ export default function Quiz() {
   });
 
   useEffect(() => {
-    const allFlags = [...flagData];
-    shuffleArray(allFlags);
+    const allCountries = [...countriesData];
+    shuffleArray(allCountries);
 
-    const quizQuestions = allFlags.slice(0, 15).map((flag) => {
-      const incorrectOptions = allFlags
-        .filter((f) => f.name !== flag.name)
+    const quizQuestions = allCountries.slice(0, 15).map((country) => {
+      const incorrectOptions = allCountries
+        .filter((f) => f.name !== country.name)
         .sort(() => 0.5 - Math.random())
         .slice(0, 3)
         .map((f) => f.name);
 
-      const options = [flag.name, ...incorrectOptions];
+      const options = [country.name, ...incorrectOptions];
       shuffleArray(options);
 
+      const questionMode = pickRandomElement(questionModeOptions);
+
       return {
-        flag: flag.image,
-        correctAnswer: flag.name,
+        mode: questionMode,
+        capital: country.capital,
+        flag: country.image,
+        correctAnswer: country.name,
         options,
         status: "unanswered" as AnswerStatus,
       };
@@ -132,10 +143,10 @@ export default function Quiz() {
             </p>
             <p className="text-lg mb-6">
               {score === quizState.questions.length
-                ? "Perfect score! You're a flag expert!"
+                ? "Perfect score! You're a countries expert!"
                 : score > quizState.questions.length / 2
-                ? "Great job! You know your flags well."
-                : "Keep practicing to improve your flag knowledge!"}
+                ? "Great job! You know your countries well."
+                : "Keep practicing to improve your countries knowledge!"}
             </p>
           </CardContent>
           <CardFooter className="flex justify-center">
@@ -154,11 +165,18 @@ export default function Quiz() {
           </CardHeader>
           <CardContent className="flex flex-col items-center">
             <div className="w-full max-w-xs mb-6">
-              <img
-                src={currentQuestion.flag || "/placeholder.svg"}
-                alt="Flag"
-                className="w-full h-auto border border-gray-200 rounded-md shadow-sm"
-              />
+              {currentQuestion.mode === "flags" ? (
+                <img
+                  src={currentQuestion.flag}
+                  alt="Flag"
+                  className="w-full h-auto border border-gray-200 rounded-md shadow-sm"
+                />
+              ) : (
+                <p className="text-center">
+                  <span className="font-bold">{currentQuestion.capital}</span>{" "}
+                  is the capital of{" "}
+                </p>
+              )}
             </div>
 
             <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
