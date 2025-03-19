@@ -167,9 +167,10 @@ export default function Quiz() {
 
                 if (currentQuestion.selectedAnswer) {
                   if (option === currentQuestion.correctAnswer) {
-                    buttonClass = "bg-green-500 hover:bg-green-600 text-white";
+                    buttonClass =
+                      "!bg-green-500 !hover:bg-green-600 text-white";
                   } else if (option === currentQuestion.selectedAnswer) {
-                    buttonClass = "bg-red-500 hover:bg-red-600 text-white";
+                    buttonClass = "!bg-red-500 !hover:bg-red-600 text-white";
                   } else {
                     buttonClass = "opacity-50";
                   }
