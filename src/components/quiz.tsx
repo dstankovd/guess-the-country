@@ -161,7 +161,7 @@ export default function Quiz() {
               />
             </div>
 
-            <div className="w-full grid grid-cols-1 gap-3 mt-4">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
               {currentQuestion.options.map((option, index) => {
                 let buttonClass = "";
 

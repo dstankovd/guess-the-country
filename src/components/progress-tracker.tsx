@@ -10,9 +10,9 @@ export default function ProgressTracker({
 }) {
   return (
     <div className="w-full overflow-x-auto py-4">
-      <div className="flex space-x-2 min-w-max">
+      <div className="flex space-x-2 min-w-max justify-center">
         {questions.map((question, index) => {
-          let borderClass = "border-gray-200";
+          let borderClass = "border-border";
           let content = "?";
 
           if (question.status === "correct") {
@@ -27,7 +27,7 @@ export default function ProgressTracker({
             <div
               key={index}
               className={`relative flex-shrink-0 w-10 h-10 border-2 ${borderClass} rounded-md overflow-hidden ${
-                index === currentIndex ? "ring-2 ring-blue-500" : ""
+                index === currentIndex ? "ring-2" : ""
               }`}
             >
               {question.status !== "unanswered" ? (
@@ -37,7 +37,7 @@ export default function ProgressTracker({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 font-bold">
+                <div className="w-full h-full flex items-center justify-center bg-card text-card-foreground font-bold">
                   {content}
                 </div>
               )}
