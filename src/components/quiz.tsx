@@ -92,7 +92,7 @@ export default function Quiz() {
           gameCompleted: true,
         }));
       }
-    }, 1500);
+    }, 2000);
   };
 
   const restartGame = () => {
